@@ -5,8 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class StringTest {
     @Test
     void replace() {
-        String actual = "abc".replace("b", "d");
-        assertThat(actual).isEqualTo(actual);
+        String actual = "abc";
+        String sut = actual.replace("b", "d");
+
+        assertThat(sut).isEqualTo("adc");
     }
 
     @Test
@@ -24,4 +26,13 @@ public class StringTest {
 
         assertThat(sut).containsExactly("1");
     }
+
+    @Test
+    void replace_parentheses() {
+        String actual = "(1,2)";
+        String sut = actual.substring(1, 4);
+
+        assertThat(sut).isEqualTo("1,2");
+    }
+
 }
