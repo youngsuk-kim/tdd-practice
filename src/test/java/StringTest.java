@@ -16,4 +16,12 @@ public class StringTest {
 
         assertThat(sut).contains("1", "2");
     }
+
+    @Test
+    void split_contains() {
+        String actual = "1";
+        String[] sut = actual.split(",");
+
+        assertThat(sut).containsExactly("1");
+    }
 }
