@@ -1,32 +1,54 @@
 package numberbaseball;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class Balls {
-    private final List<Ball> balls;
 
-    public Balls(List<Ball> balls) {
-        this.balls = balls;
+    private final List<Integer> answers;
+
+    public Balls(List<Integer> answers) {
+        this.answers = answers;
     }
 
-    public int size() {
-        return balls.size();
-    }
-
-    public int position(Ball ball) {
-        int result = 0;
-
-        for (Ball ball1 : balls) {
-            result = result + 1;
-            if (ball1.equals(ball)) {
-                break;
-            }
+    public BallStatus judge(Ball userBall) {
+        long numStrikes = IntStream.range(0, 3)
+                .filter(index -> isStrike(userBall, index))
+                .count();
+        long numBalls = IntStream.range(0, 3)
+                .filter(index -> isBall(userBall, index))
+                .count();
+        if (numStrikes > 0) {
+            return BallStatus.STRIKE;
         }
-
-        return result;
+        if (numBalls > 0) {
+            return BallStatus.BALL;
+        }
+        return BallStatus.NOTHING;
+    }
+    
+    private boolean isStrike(Ball userBall, int index) {
+        return isSameIndex(userBall, index) && isSameNumber(userBall.userNumber(), answers.get(index));
     }
 
-    public boolean contain(Ball ball) {
-        return balls.contains(ball);
+    private boolean isBall(Ball userBall, int index) {
+        return !isSameIndex(userBall, index) && isSameNumber(userBall.userNumber(), answers.get(index));
+    }
+
+    private boolean isSameNumber(int number, int answer) {
+        return number == answer;
+    }
+
+    private static boolean isSameIndex(Ball userBall, int answer) {
+        return userBall.index() == answer;
+    }
+
+    public PlayResult play(List<Integer> userBalls) {
+        PlayResult playResult = new PlayResult();
+        for (int i = 0; i < userBalls.size(); i++) {
+            BallStatus status = judge(new Ball(userBalls.get(i), i));
+            playResult.addStatus(status);
+        }
+        return playResult;
     }
 }

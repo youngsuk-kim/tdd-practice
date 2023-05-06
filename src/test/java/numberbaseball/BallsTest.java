@@ -4,15 +4,41 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 
-class BallsTest {
+public class BallsTest {
 
     @Test
-    void 공의_위치를_맞추는지() {
-        Balls balls = new Balls(Arrays.asList(new Ball(1), new Ball(2), new Ball(3)));
-        assertThat(balls.position(new Ball(1))).isEqualTo(1);
+    void strike_1_ball_1() {
+        Balls balls = new Balls(Arrays.asList(1, 2, 3));
+        PlayResult result = balls.play(Arrays.asList(1, 3, 4));
+        assertThat(result.getStrike()).isEqualTo(1);
+        assertThat(result.getBall()).isEqualTo(1);
     }
 
+    @Test
+    void strike_1_ball_2() {
+        Balls balls = new Balls(Arrays.asList(1, 2, 3));
+        PlayResult result = balls.play(Arrays.asList(1, 3, 2));
+        assertThat(result.getStrike()).isEqualTo(1);
+        assertThat(result.getBall()).isEqualTo(2);
+    }
+
+    @Test
+    void strike_1_nothing_2() {
+        Balls balls = new Balls(Arrays.asList(1, 2, 3));
+        PlayResult result = balls.play(Arrays.asList(1, 4, 5));
+        assertThat(result.getStrike()).isEqualTo(1);
+        assertThat(result.getNothing()).isEqualTo(2);
+    }
+
+    @Test
+    void gameOver() {
+        Balls balls = new Balls(Arrays.asList(1, 2, 3));
+        PlayResult result = balls.play(Arrays.asList(1, 2, 3));
+        assertThat(result.getStrike()).isEqualTo(3);
+        assertThat(result.getBall()).isZero();
+        assertThat(result.gameOver()).isTrue();
+    }
 }
